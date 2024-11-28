@@ -1,17 +1,17 @@
 export const vertexShader = `
 precision mediump float;
 
-uniform float density;
+uniform float uDensity;
 
-uniform float shellCount;
-uniform float shellCurvature;
-uniform float shellIndex;
-uniform float shellLength;
+uniform float uShellCount;
+uniform float uShellCurvature;
+uniform float uShellIndex;
+uniform float uShellLength;
 
-uniform float windSpeed;
-uniform float windStrength;
+uniform float uWindSpeed;
+uniform float uWindStrength;
 
-uniform float time;
+uniform float uTime;
 
 varying vec2 textureCoordinates;
 varying vec3 normals;
@@ -113,15 +113,15 @@ float pnoise(vec3 P,vec3 rep)
 // END NOISE
 
 vec3 wind(float shellHeight){
-  float noise=pnoise(vec3(textureCoordinates*density,1.)+time*windSpeed,vec3(10.));
+  float noise=pnoise(vec3(textureCoordinates*uDensity,1.)+uTime*uWindSpeed,vec3(10.));
   
   float latitudinalAttenuation=1.;
   float latitudinalCorrection=pow(1.-abs((textureCoordinates.y-.5)*2.),latitudinalAttenuation);// [0, 1] where 0 is a pole
   
-  float heightAttenuation=pow(shellHeight,shellCurvature);
+  float heightAttenuation=pow(shellHeight,uShellCurvature);
   vec3 windDirection=vec3(noise,noise,0.);
   
-  vec3 windDisplacement=windDirection*heightAttenuation*windStrength*latitudinalCorrection;
+  vec3 windDisplacement=windDirection*heightAttenuation*uWindStrength*latitudinalCorrection;
   
   return windDisplacement;
 }
@@ -130,8 +130,8 @@ void main(){
   textureCoordinates=uv;
   normals=normal;
   
-  float shellHeight=shellIndex/shellCount;
-  float extrusionScalar=shellHeight*shellLength;
+  float shellHeight=uShellIndex/uShellCount;
+  float extrusionScalar=shellHeight*uShellLength;
   vec3 extrudedPosition=position+normal*extrusionScalar;
   
   vec3 windDisplacedPosition=extrudedPosition+wind(shellHeight);

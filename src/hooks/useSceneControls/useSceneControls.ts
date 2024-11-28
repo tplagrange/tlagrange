@@ -21,12 +21,20 @@ export const useSceneControls = () => {
     }),
 
     lighting: folder({
-      lightDirectionX: { value: 1, min: -1, max: 1, step: 0.01 },
-      lightDirectionY: { value: 1, min: -1, max: 1, step: 0.01 },
-      lightDirectionZ: { value: 1, min: -1, max: 1, step: 0.01 },
+      lightDirection: {
+        value: { x: 1, y: 1, z: 1 },
+        min: { x: -1, y: -1, z: -1 },
+        max: { x: 1, y: 1, z: 1 },
+        step: 0.01,
+      },
       ambientOcclusion: folder({
-        aoAttenuation: { value: 1.5, min: 0, max: 10, step: 0.01 },
-        aoBias: { value: 0.5, min: 0, max: 1, step: 0.01 },
+        ambientOcclusionAttenuation: {
+          value: 1.5,
+          min: 0,
+          max: 10,
+          step: 0.01,
+        },
+        ambientOcclusionBias: { value: 0.5, min: 0, max: 1, step: 0.01 },
       }),
     }),
 

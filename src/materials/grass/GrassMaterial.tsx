@@ -1,52 +1,32 @@
 "use client";
 
-import { Color, ShaderMaterial, Vector3 } from "three";
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-
-import { useUniforms } from "@/hooks";
+import { Color, Vector3 } from "three";
 
 import { fragmentShader } from "./fragment";
 import { vertexShader } from "./vertex";
+import { shaderMaterial } from "@react-three/drei";
+import { extend } from "@react-three/fiber";
 
-export type GrassMaterialProps = {
-  ambientOcclusionAttenuation: number;
-  ambientOcclusionBias: number;
-  color: Color;
-  density: number;
-  lightDirection: Vector3;
-  noiseMax: number;
-  noiseMin: number;
-  shellCount: number;
-  shellIndex: number;
-  shellCurvature: number;
-  shellLength: number;
-  shellThickness: number;
-  windSpeed: number;
-  windStrength: number;
-};
+export const GrassMaterial = shaderMaterial(
+  {
+    uAmbientOcclusionAttenuation: 1.5,
+    uAmbientOcclusionBias: 0.5,
+    uColor: new Color("#69c7f2"),
+    uDensity: 128,
+    uLightDirection: new Vector3(1, 1, 1),
+    uNoiseMax: 1,
+    uNoiseMin: 0.69,
+    uShellCount: 256,
+    uShellCurvature: 10,
+    uShellIndex: 0,
+    uShellLength: 0.5,
+    uShellThickness: 25,
+    uTime: 0,
+    uWindSpeed: 0.25,
+    uWindStrength: 0.1,
+  },
+  vertexShader,
+  fragmentShader
+);
 
-export const GrassMaterial = (props: GrassMaterialProps) => {
-  const uniforms = useUniforms(props);
-
-  const materialRef = useRef<ShaderMaterial | null>(null);
-
-  useFrame(({ clock }) => {
-    if (materialRef.current) {
-      if (materialRef.current.uniforms.time) {
-        materialRef.current.uniforms.time = { value: clock.getElapsedTime() };
-      } else {
-        materialRef.current.uniforms.time = { value: clock.getElapsedTime() };
-      }
-    }
-  });
-
-  return (
-    <shaderMaterial
-      fragmentShader={fragmentShader}
-      ref={materialRef}
-      uniforms={uniforms}
-      vertexShader={vertexShader}
-    />
-  );
-};
+extend({ GrassMaterial });

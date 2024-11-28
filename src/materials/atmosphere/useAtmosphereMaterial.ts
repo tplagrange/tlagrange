@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef } from "react";
+import { RefObject, useEffect, useRef } from "react";
 import { ShaderMaterial, Color } from "three";
 
 export type UseAtmosphereMaterialInput = {
@@ -7,7 +7,7 @@ export type UseAtmosphereMaterialInput = {
 };
 
 export type UseAtmosphereMaterialOutput = {
-  ref: Ref<ShaderMaterial>;
+  ref: RefObject<ShaderMaterial>;
 };
 
 export const useAtmosphereMaterial = (

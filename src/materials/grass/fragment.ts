@@ -3,20 +3,20 @@ export const fragmentShader = `
 
 precision mediump float;
 
-uniform vec3 color;
-uniform float density;
+uniform vec3 uColor;
+uniform float uDensity;
 
-uniform float ambientOcclusionAttenuation;
-uniform float ambientOcclusionBias;
+uniform float uAmbientOcclusionAttenuation;
+uniform float uAmbientOcclusionBias;
 
-uniform float shellCount;
-uniform float shellIndex;
-uniform float shellThickness;
+uniform float uShellCount;
+uniform float uShellIndex;
+uniform float uShellThickness;
 
-uniform float noiseMin;
-uniform float noiseMax;
+uniform float uNoiseMin;
+uniform float uNoiseMax;
 
-uniform vec3 lightDirection;
+uniform vec3 uLightDirection;
 
 varying vec2 textureCoordinates;
 varying vec3 normals;
@@ -38,24 +38,24 @@ float valveHalfLambert(vec3 normals,vec3 light){
 }
 
 vec4 planeConfig(){
-  vec2 newUV=textureCoordinates*density;
+  vec2 newUV=textureCoordinates*uDensity;
   vec2 localUV=fract(newUV)*2.-1.;
   float localDistanceFromCenter=length(localUV);
   
   uint seed=uint(newUV.x+100.)*uint(newUV.y+100.)*10u;
-  float rand=mix(noiseMin,noiseMax,hash(seed));
+  float rand=mix(uNoiseMin,uNoiseMax,hash(seed));
   
-  float height=shellIndex/shellCount;
-  bool outsideThickness=(localDistanceFromCenter)>(shellThickness*(rand-height));
+  float height=uShellIndex/uShellCount;
+  bool outsideThickness=(localDistanceFromCenter)>(uShellThickness*(rand-height));
   
-  if(outsideThickness&&(shellIndex>1.))discard;
+  if(outsideThickness&&(uShellIndex>1.))discard;
   
-  float halfLambert=valveHalfLambert(normals,lightDirection);
+  float halfLambert=valveHalfLambert(normals,uLightDirection);
   
-  vec4 finalColor=vec4(color*height*halfLambert,1.);
+  vec4 finalColor=vec4(uColor*height*halfLambert,1.);
   
-  float ambientOcclusion=pow(height,ambientOcclusionAttenuation);
-  ambientOcclusion+=ambientOcclusionBias;
+  float ambientOcclusion=pow(height,uAmbientOcclusionAttenuation);
+  ambientOcclusion+=uAmbientOcclusionBias;
   ambientOcclusion=clamp(ambientOcclusion,0.,1.);
   finalColor=finalColor*ambientOcclusion;
   
