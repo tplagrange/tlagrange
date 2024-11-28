@@ -1,22 +1,18 @@
 "use client";
 
 import { useSceneControls } from "@/hooks";
-import { Color, Vector3 } from "three";
-import { AtmosphereMaterial, AtmosphereMaterialProps } from "@/materials";
-import { GrassMaterialProps } from "@/materials/grass";
-import { useCallback, useMemo } from "react";
+import { Color, ShaderMaterial, Vector3 } from "three";
+import { GrassMaterialProps, useAtmosphereMaterial } from "@/materials";
+import { useCallback, useRef, useEffect } from "react";
 import { Shell } from "./Shell";
 
 export const Planet = () => {
   const { color, intensity, ...rest } = useSceneControls();
 
-  const atmosphereProps = useMemo<AtmosphereMaterialProps>(
-    () => ({
-      color: new Color(color),
-      intensity: intensity,
-    }),
-    [color, intensity]
-  );
+  const { ref: atmosphereMaterialRef } = useAtmosphereMaterial({
+    color,
+    intensity,
+  });
 
   const getGrassMaterialProps = useCallback<
     (shellIndex: number) => GrassMaterialProps
@@ -62,9 +58,9 @@ export const Planet = () => {
 
   return (
     <>
-      <mesh scale={1.6}>
+      <mesh scale={rest.scale}>
         <sphereGeometry />
-        <AtmosphereMaterial {...atmosphereProps} />
+        <atmosphereMaterial ref={atmosphereMaterialRef} />
       </mesh>
       {Array.from({ length: rest.shellCount }).map((_unused, index) => (
         <Shell key={index} {...getGrassMaterialProps(index)} />

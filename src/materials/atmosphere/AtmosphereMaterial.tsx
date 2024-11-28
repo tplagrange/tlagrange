@@ -1,30 +1,20 @@
 "use client";
 
-import {
-  AdditiveBlending,
-  BackSide,
-  Color,
-  ShaderMaterialParameters,
-} from "three";
-
+import { AdditiveBlending, BackSide, Color } from "three";
+import { extend } from "@react-three/fiber";
 import { fragmentShader } from "./fragment";
 import { vertexShader } from "./vertex";
-import { useUniforms } from "@/hooks";
+import { shaderMaterial } from "@react-three/drei";
 
-export type AtmosphereMaterialProps = {
-  color: Color;
-  intensity: number;
-};
+export const AtmosphereMaterial = shaderMaterial(
+  {
+    uColor: new Color("#69c7f2"),
+    uIntensity: 0.5,
+    blending: AdditiveBlending,
+    side: BackSide,
+  },
+  vertexShader,
+  fragmentShader
+);
 
-export const AtmosphereMaterial = (props: AtmosphereMaterialProps) => {
-  const uniforms = useUniforms(props);
-  return (
-    <shaderMaterial
-      blending={AdditiveBlending}
-      fragmentShader={fragmentShader}
-      side={BackSide}
-      uniforms={uniforms as ShaderMaterialParameters["uniforms"]}
-      vertexShader={vertexShader}
-    />
-  );
-};
+extend({ AtmosphereMaterial });

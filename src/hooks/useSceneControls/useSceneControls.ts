@@ -13,7 +13,7 @@ export const useSceneControls = () => {
     atmosphere: folder({
       color: { value: "#69c7f2" },
       intensity: { value: 0.5, min: 0, max: 1, step: 0.01 },
-      scale: { value: 1, min: 0, max: 10, step: 0.01 },
+      scale: { value: 1.6, min: 0, max: 10, step: 0.01 },
     }),
     wind: folder({
       windSpeed: { value: 0.25, min: 0, max: 1, step: 0.01 },
